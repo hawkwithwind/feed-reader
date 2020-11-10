@@ -1,0 +1,26 @@
+version: '3.5'
+
+x-defualts: &defaults
+  restart: unless-stopped
+  networks:
+    - feed-reader-network
+  build:
+    context: docker/runtime
+    args:
+      - mirror=$alpine_mirror
+      
+  volumes:
+    - ./build:/app
+    - ./config:/config
+
+services:
+  web:
+    <<: *defaults
+    command: ./app/server -s web
+    ports:
+      - '19000:19000'
+
+networks:
+  feed-reader-network:
+    name: feed_reader_default
+    
